@@ -16,7 +16,11 @@ class SimulateurSCADA(QMainWindow):
         super().__init__()
         
         try:
-            fichier_excel = r"C:\Users\dell\Desktop\Parametres_OCP.xlsx"
+            # --- MODIFICATION ICI : Chemin dynamique ---
+            dossier_courant = os.path.dirname(os.path.abspath(__file__))
+            fichier_excel = os.path.join(dossier_courant, "Parametres_OCP.xlsx")
+            # -------------------------------------------
+            
             df_topo = pd.read_excel(fichier_excel, sheet_name='Topographie')
             self.X = np.arange(0, 187.5, 0.5)
             self.D = 0.850
@@ -31,7 +35,7 @@ class SimulateurSCADA(QMainWindow):
             self.noms_stations = list(df_caps['Nom_Station'].values)
             self.dist_stations = list(df_caps['Distance_km'].values)
         except Exception as e:
-            QMessageBox.critical(self, "Erreur", f"Fichier Excel introuvable :\n{str(e)}")
+            QMessageBox.critical(self, "Erreur", f"Fichier Excel introuvable :\n{str(e)}\n\nAssurez-vous que 'Parametres_OCP.xlsx' est dans le même dossier que ce script.")
             sys.exit()
 
         self.t_sim = datetime.strptime('00:00:00', '%H:%M:%S')
